@@ -158,7 +158,22 @@ window.setInterval(() => {
             radius
         })
     );
-}, 3000)
+}, 3000);
+
+function circleCollision(circle1, circle2) {
+    const xDiff = circle2.position.x - circle1.position.x;
+    const yDiff = circle2.position.y - circle1.position.y;
+
+    const distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
+
+    if (distance <= circle1.radius + circle2.radius) {
+        console.log('collision');
+        
+        return true;
+    }
+
+    return false;
+}
 
 function animate() {
     window.requestAnimationFrame(animate)
@@ -182,6 +197,14 @@ function animate() {
 
         if (asteroid.position.x + asteroid.radius < 0 || asteroid.position.x - asteroid.radius > canvas.width || asteroid.position.y - asteroid.radius > canvas.height || asteroid.position.y + asteroid.radius < 0) {
             asteroids.splice(i, 1)
+        }
+
+        for (let j = projectiles.length - 1; j >= 0; j--) {
+            const projectile = projectiles[j];
+            if (circleCollision(asteroid, projectile)) {
+                asteroids.splice(i, 1);
+                projectiles.splice(j, 1);
+            }
         }
 
     }
